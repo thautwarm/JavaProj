@@ -1,38 +1,83 @@
+
 package entity;
+import java.util.Map;
+import java.util.HashMap;
 
-import utils.GraceJava;
 
-/*
- * id: 钱包的编号
- * 
- * total :钱包金额。
- */
-public class userPocket {
-	private int id;
-	private double total;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public double getTotal() {
-		return total;
-	}
-	public void setTotal(double total) {
-		this.total = total;
-	}
-	public static String[] Attrs(){
-		return  "id,total".split(",");
-	}
+public class UserPocket {
+	private Long id;
+	private Integer total;
 	
-	public static String toSQL(){
-		String attrs="id,total";
-		String types="int,double";
-		return attrs+"#"+types;
-	}
-	public String toString(){
-		return  String.format(GraceJava.repeat("%s", ",", 2),id,total);
-	}
+    public void setId(Long id){
+        this.id=id;
+    }
+    
+    public void setId(Integer id){
+        this.id= Long.valueOf(id.toString());
+    }
+    
+
+    public Long getId(){
+        return id;
+    }
+    
+
+    public void setTotal(Integer total){
+        this.total=total;
+    }
+    
+
+    public Integer getTotal(){
+        return total;
+    }
+    
+
+    public boolean setByKey(String ATTR_NAME, Object _SWITCH_VALUE){
+        if (_SWITCH_VALUE==null) {
+            System.out.println("setByKey-ValueNullError");
+            return false;
+            }
+        
+        switch(ATTR_NAME){
+
+            case "id":
+                this.setId( (Long) _SWITCH_VALUE );
+                break;
+
+
+            case "total":
+                this.setTotal( (Integer) _SWITCH_VALUE );
+                break;
+
+
+            default :
+                System.out.println("setByKey-KeyNotFoundError");
+                break;
+
+            }
+        
+        
+        return true;
+    }
+
+	
+    public String toSQLValues(){
+        return id+","+total;
+    }
+
+
+    public static String toSQLColumns(){
+        return "id,total";
+    }
+
+
+    public static Map<String,String> getTypeMap(){
+    Map<String,String> TypeMap=new HashMap<String,String>();
+    
+    TypeMap.put("id","Long");
+
+    TypeMap.put("total","Integer");
+    return TypeMap;
+    }
 
 }

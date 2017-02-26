@@ -1,24 +1,24 @@
 
 package dao;
-import entity.Category;
+import entity.Activity;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import GraceJava.SQL;
 import GraceJava.ToStr;
-public class CategoryDao extends SQL{
+public class ActivityDao extends SQL{
 
-	public CategoryDao() {
-		setTypeMap(Category.getTypeMap());
-		setTableName("category");
+	public ActivityDao() {
+		setTypeMap(Activity.getTypeMap());
+		setTableName("activity");
 	}
-	public ArrayList<Category> selectEntity(String columns,String MatchValues){
-		ArrayList<Category> categoryList= new ArrayList<Category>();
-		ResultSet res =Select(Category.toSQLColumns(),columns,MatchValues);
+	public ArrayList<Activity> selectEntity(String columns,String MatchValues){
+		ArrayList<Activity> activityList= new ArrayList<Activity>();
+		ResultSet res =Select(Activity.toSQLColumns(),columns,MatchValues);
 		String[] columnsKeys=columns.split(",");
 		try{
 		while(res.next()){
-			Category category=new Category();
+			Activity activity=new Activity();
 			for(String column:columnsKeys){
 				
 				Object obj=null;
@@ -49,23 +49,23 @@ public class CategoryDao extends SQL{
 					continue;
 				}
 				
-				category.setByKey(column, obj);
+				activity.setByKey(column, obj);
 			}
-			categoryList.add(category);
+			activityList.add(activity);
 			}
 		}
 		catch (SQLException e){
 			e.printStackTrace();
 		}
-		return categoryList;
+		return activityList;
 	}
-	public ArrayList<Category> selectEntity(String columns,Object ...MatchValues){
-		ArrayList<Category> categoryList= new ArrayList<Category>();
-		ResultSet res =Select(Category.toSQLColumns(),columns,MatchValues);
+	public ArrayList<Activity> selectEntity(String columns,Object ...MatchValues){
+		ArrayList<Activity> activityList= new ArrayList<Activity>();
+		ResultSet res =Select(Activity.toSQLColumns(),columns,MatchValues);
 		String[] columnsKeys=columns.split(",");
 		try{
 		while(res.next()){
-			Category category=new Category();
+			Activity activity=new Activity();
 			for(String column:columnsKeys){
 				
 				Object obj=null;
@@ -96,25 +96,25 @@ public class CategoryDao extends SQL{
 					continue;
 				}
 				
-				category.setByKey(column, obj);
+				activity.setByKey(column, obj);
 			}
-			categoryList.add(category);
+			activityList.add(activity);
 			}
 		}
 		catch (SQLException e){
 			e.printStackTrace();
 		}
-		return categoryList;
+		return activityList;
 	}
-     	public ArrayList<Category> selectEntity(Category categorySelect){
-            String MatchValues=categorySelect.toSQLValues();
-		ArrayList<Category> categoryList= new ArrayList<Category>();
-		String columns=Category.toSQLColumns();
-		ResultSet res =Select(Category.toSQLColumns(),columns,MatchValues);
+     	public ArrayList<Activity> selectEntity(Activity activitySelect){
+            String MatchValues=activitySelect.toSQLValues();
+		ArrayList<Activity> activityList= new ArrayList<Activity>();
+		String columns=Activity.toSQLColumns();
+		ResultSet res =Select(Activity.toSQLColumns(),columns,MatchValues);
 		String[] columnsKeys=columns.split(",");
 		try{
 		while(res.next()){
-			Category category=new Category();
+			Activity activity=new Activity();
 			for(String column:columnsKeys){
 				
 					Object obj=null;
@@ -145,21 +145,21 @@ public class CategoryDao extends SQL{
 					continue;
 				}
 				
-				category.setByKey(column, obj);
+				activity.setByKey(column, obj);
 			}
-			categoryList.add(category);
+			activityList.add(activity);
 			}
 		}
 		catch (SQLException e){
 			e.printStackTrace();
 		}
-		return categoryList;
+		return activityList;
 	}
-	public boolean add(Category category){
-		if (isDuplicatedByKey("id",category.getId()).equals("No")){
-			return addEntity(Category.toSQLColumns(),category.toSQLValues());
+	public boolean add(Activity activity){
+		if (isDuplicatedByKey("id",activity.getId()).equals("No")){
+			return addEntity(Activity.toSQLColumns(),activity.toSQLValues());
 		}
-            System.out.println("addCategoryError-DuplicatedAdded.");
+            System.out.println("addActivityError-DuplicatedAdded.");
 		return false;
 	}
 }

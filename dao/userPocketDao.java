@@ -1,63 +1,165 @@
-package dao;
-import java.util.ArrayList;
-import java.util.Map;
-import entity.User;
-import utils.SQL;
-import utils.GraceJava;
-import entity.userPocket;
-public class userPocketDao {
-	
-	private SQL javaSQL;
-	private final String tableName="userPocket";
-	public userPocketDao (){
-		javaSQL=new SQL();
-		javaSQL.setObj(userPocket.toSQL());
-	}
 
-	public boolean add(userPocket pocket){
-		String judge=javaSQL.isDuplicatedById(tableName, pocket.getId());
-		boolean added=false;
-		if (judge.equals("No")){
-			String columns= String.join(",",javaSQL.getColumns());
-			String types=String.join(",", javaSQL.getTypes());
-			added=javaSQL.add(tableName,columns , pocket.toString(), types);
+package dao;
+import entity.UserPocket;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import GraceJava.SQL;
+import GraceJava.ToStr;
+public class UserPocketDao extends SQL{
+
+	public UserPocketDao() {
+		setTypeMap(UserPocket.getTypeMap());
+		setTableName("userpocket");
+	}
+	public ArrayList<UserPocket> selectEntity(String columns,String MatchValues){
+		ArrayList<UserPocket> userpocketList= new ArrayList<UserPocket>();
+		ResultSet res =Select(UserPocket.toSQLColumns(),columns,MatchValues);
+		String[] columnsKeys=columns.split(",");
+		try{
+		while(res.next()){
+			UserPocket userpocket=new UserPocket();
+			for(String column:columnsKeys){
+				
+				Object obj=null;
+				String type=this.TypeMap.get(column);
+				switch (type){
+    
+				case "Integer":
+					obj=res.getInt(column);
+					break;
+				case "String":
+					obj=res.getString(column);
+					break;
+				case "Date":
+					obj= ToStr.Timestamp2Date(res.getTimestamp(column));
+					break;
+				case "Double":
+					obj= res.getDouble(column);
+					break;
+				case "Long":
+					obj= res.getLong(column);
+					break;
+				default:
+					break;
+				}
+				
+				
+				if (obj==null) {
+					continue;
+				}
+				
+				userpocket.setByKey(column, obj);
+			}
+			userpocketList.add(userpocket);
+			}
 		}
-		return added;
-	}
-	
-	public boolean deleteById(int id){
-		boolean ret=javaSQL.deleteByKey(tableName, "id", GraceJava.int2str(id), "int");
-		return ret;
-	}
-	
-	public String getTotal(User user){
-		String ret=null;
-		Map<String , String> map=javaSQL.Select(tableName, "total", "id",GraceJava.int2str(user.getPocketid()),"int");
-		if (map==null){
-			ret="NoUserHasThePocketId:this user has a wrong userPocketId";
+		catch (SQLException e){
+			e.printStackTrace();
 		}
-		else{
-			ret=map.get("total");
+		return userpocketList;
+	}
+	public ArrayList<UserPocket> selectEntity(String columns,Object ...MatchValues){
+		ArrayList<UserPocket> userpocketList= new ArrayList<UserPocket>();
+		ResultSet res =Select(UserPocket.toSQLColumns(),columns,MatchValues);
+		String[] columnsKeys=columns.split(",");
+		try{
+		while(res.next()){
+			UserPocket userpocket=new UserPocket();
+			for(String column:columnsKeys){
+				
+				Object obj=null;
+				String type=this.TypeMap.get(column);
+				switch (type){
+    
+				case "Integer":
+					obj=res.getInt(column);
+					break;
+				case "String":
+					obj=res.getString(column);
+					break;
+				case "Date":
+					obj= ToStr.Timestamp2Date(res.getTimestamp(column));
+					break;
+				case "Double":
+					obj= res.getDouble(column);
+					break;
+				case "Long":
+					obj= res.getLong(column);
+					break;
+				default:
+					break;
+				}
+				
+				
+				if (obj==null) {
+					continue;
+				}
+				
+				userpocket.setByKey(column, obj);
+			}
+			userpocketList.add(userpocket);
+			}
 		}
-	return ret;
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		return userpocketList;
 	}
-	
-	
-	public boolean updateById(int id,userPocket pocketNew){
-		String MatchValues=pocketNew.toString();
-		String columns= String.join(",",javaSQL.getColumns());
-		String types=String.join(",", javaSQL.getTypes());
-		boolean ret=javaSQL.changeInfo(tableName, id,columns , MatchValues, types);
-		return ret;
+     	public ArrayList<UserPocket> selectEntity(UserPocket userpocketSelect){
+            String MatchValues=userpocketSelect.toSQLValues();
+		ArrayList<UserPocket> userpocketList= new ArrayList<UserPocket>();
+		String columns=UserPocket.toSQLColumns();
+		ResultSet res =Select(UserPocket.toSQLColumns(),columns,MatchValues);
+		String[] columnsKeys=columns.split(",");
+		try{
+		while(res.next()){
+			UserPocket userpocket=new UserPocket();
+			for(String column:columnsKeys){
+				
+					Object obj=null;
+				String type=this.TypeMap.get(column);
+				switch (type){
+    
+				case "Integer":
+					obj=res.getInt(column);
+					break;
+				case "String":
+					obj=res.getString(column);
+					break;
+				case "Date":
+					obj= ToStr.Timestamp2Date(res.getTimestamp(column));
+					break;
+				case "Double":
+					obj= res.getDouble(column);
+					break;
+				case "Long":
+					obj= res.getLong(column);
+					break;
+				default:
+					break;
+				}
+				
+				
+				if (obj==null) {
+					continue;
+				}
+				
+				userpocket.setByKey(column, obj);
+			}
+			userpocketList.add(userpocket);
+			}
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		return userpocketList;
 	}
-	public Map<String , String> SelectById(String SelectedKeys,int id){
-		return javaSQL.Select(tableName, SelectedKeys, "id", GraceJava.int2str(id), "int");
-		
+	public boolean add(UserPocket userpocket){
+		if (isDuplicatedByKey("id",userpocket.getId()).equals("No")){
+			return addEntity(UserPocket.toSQLColumns(),userpocket.toSQLValues());
+		}
+            System.out.println("addUserPocketError-DuplicatedAdded.");
+		return false;
 	}
-	public ArrayList<Map<String,String>> SelectByKeys(String SelectedKeys,String MatchKeys,String MatchValues){
-		String MatchValueTypes=javaSQL.TypesOfKeys(MatchKeys);
-		return javaSQL.SelectBat(tableName, SelectedKeys, MatchKeys, MatchValues, MatchValueTypes);
-	}
-	
-	
 }

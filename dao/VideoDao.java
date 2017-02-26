@@ -1,24 +1,24 @@
 
 package dao;
-import entity.Category;
+import entity.Video;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import GraceJava.SQL;
 import GraceJava.ToStr;
-public class CategoryDao extends SQL{
+public class VideoDao extends SQL{
 
-	public CategoryDao() {
-		setTypeMap(Category.getTypeMap());
-		setTableName("category");
+	public VideoDao() {
+		setTypeMap(Video.getTypeMap());
+		setTableName("video");
 	}
-	public ArrayList<Category> selectEntity(String columns,String MatchValues){
-		ArrayList<Category> categoryList= new ArrayList<Category>();
-		ResultSet res =Select(Category.toSQLColumns(),columns,MatchValues);
+	public ArrayList<Video> selectEntity(String columns,String MatchValues){
+		ArrayList<Video> videoList= new ArrayList<Video>();
+		ResultSet res =Select(Video.toSQLColumns(),columns,MatchValues);
 		String[] columnsKeys=columns.split(",");
 		try{
 		while(res.next()){
-			Category category=new Category();
+			Video video=new Video();
 			for(String column:columnsKeys){
 				
 				Object obj=null;
@@ -49,23 +49,23 @@ public class CategoryDao extends SQL{
 					continue;
 				}
 				
-				category.setByKey(column, obj);
+				video.setByKey(column, obj);
 			}
-			categoryList.add(category);
+			videoList.add(video);
 			}
 		}
 		catch (SQLException e){
 			e.printStackTrace();
 		}
-		return categoryList;
+		return videoList;
 	}
-	public ArrayList<Category> selectEntity(String columns,Object ...MatchValues){
-		ArrayList<Category> categoryList= new ArrayList<Category>();
-		ResultSet res =Select(Category.toSQLColumns(),columns,MatchValues);
+	public ArrayList<Video> selectEntity(String columns,Object ...MatchValues){
+		ArrayList<Video> videoList= new ArrayList<Video>();
+		ResultSet res =Select(Video.toSQLColumns(),columns,MatchValues);
 		String[] columnsKeys=columns.split(",");
 		try{
 		while(res.next()){
-			Category category=new Category();
+			Video video=new Video();
 			for(String column:columnsKeys){
 				
 				Object obj=null;
@@ -96,25 +96,25 @@ public class CategoryDao extends SQL{
 					continue;
 				}
 				
-				category.setByKey(column, obj);
+				video.setByKey(column, obj);
 			}
-			categoryList.add(category);
+			videoList.add(video);
 			}
 		}
 		catch (SQLException e){
 			e.printStackTrace();
 		}
-		return categoryList;
+		return videoList;
 	}
-     	public ArrayList<Category> selectEntity(Category categorySelect){
-            String MatchValues=categorySelect.toSQLValues();
-		ArrayList<Category> categoryList= new ArrayList<Category>();
-		String columns=Category.toSQLColumns();
-		ResultSet res =Select(Category.toSQLColumns(),columns,MatchValues);
+     	public ArrayList<Video> selectEntity(Video videoSelect){
+            String MatchValues=videoSelect.toSQLValues();
+		ArrayList<Video> videoList= new ArrayList<Video>();
+		String columns=Video.toSQLColumns();
+		ResultSet res =Select(Video.toSQLColumns(),columns,MatchValues);
 		String[] columnsKeys=columns.split(",");
 		try{
 		while(res.next()){
-			Category category=new Category();
+			Video video=new Video();
 			for(String column:columnsKeys){
 				
 					Object obj=null;
@@ -145,21 +145,21 @@ public class CategoryDao extends SQL{
 					continue;
 				}
 				
-				category.setByKey(column, obj);
+				video.setByKey(column, obj);
 			}
-			categoryList.add(category);
+			videoList.add(video);
 			}
 		}
 		catch (SQLException e){
 			e.printStackTrace();
 		}
-		return categoryList;
+		return videoList;
 	}
-	public boolean add(Category category){
-		if (isDuplicatedByKey("id",category.getId()).equals("No")){
-			return addEntity(Category.toSQLColumns(),category.toSQLValues());
+	public boolean add(Video video){
+		if (isDuplicatedByKey("id",video.getId()).equals("No")){
+			return addEntity(Video.toSQLColumns(),video.toSQLValues());
 		}
-            System.out.println("addCategoryError-DuplicatedAdded.");
+            System.out.println("addVideoError-DuplicatedAdded.");
 		return false;
 	}
 }

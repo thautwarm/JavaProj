@@ -1,81 +1,165 @@
-package dao;
-import java.util.ArrayList;
-import java.util.Map;
-import entity.User;
-import utils.SQL;
-import utils.GraceJava;
-public class userDao {
-	
-	private SQL javaSQL;
-	private final String tableName="user";
-	public userDao(){
-		javaSQL=new SQL();
-		javaSQL.setObj(User.toSQL());
-	}
-	
-	
-	
-	public boolean add(User user){
-		String judge=javaSQL.isDuplicatedById(tableName, user.getId());
-		boolean added=false;
-		if (judge.equals("No")){
-			String columns= String.join(",",javaSQL.getColumns());
-			String types=String.join(",", javaSQL.getTypes());
-			added=javaSQL.add(tableName,columns , user.toString(), types);
-		}
-		return added;
-	}
-	
-	
-	
-	public boolean deleteById(int id){
-		boolean ret=javaSQL.deleteByKey(tableName, "id", GraceJava.int2str(id), "int");
-		return ret;
-	}
-	
-	
-	
-	
-	public String userCheckById(User user){
-		String ret=null;
-		Map<String , String> map=javaSQL.Select(tableName, "password", "id",GraceJava.int2str(user.getId()),"int");
-		if (map==null){
-			ret="NoUserHasTheId";
-		}
-		else
-		
-		{ 
-			if(map.get("username").equals(user.getUsername()))
 
-				{
-					ret="Yes";
-				}
-			else
-				{
-					ret="No";
-				}	
+package dao;
+import entity.User;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import GraceJava.SQL;
+import GraceJava.ToStr;
+public class UserDao extends SQL{
+
+	public UserDao() {
+		setTypeMap(User.getTypeMap());
+		setTableName("user");
+	}
+	public ArrayList<User> selectEntity(String columns,String MatchValues){
+		ArrayList<User> userList= new ArrayList<User>();
+		ResultSet res =Select(User.toSQLColumns(),columns,MatchValues);
+		String[] columnsKeys=columns.split(",");
+		try{
+		while(res.next()){
+			User user=new User();
+			for(String column:columnsKeys){
 				
+				Object obj=null;
+				String type=this.TypeMap.get(column);
+				switch (type){
+    
+				case "Integer":
+					obj=res.getInt(column);
+					break;
+				case "String":
+					obj=res.getString(column);
+					break;
+				case "Date":
+					obj= ToStr.Timestamp2Date(res.getTimestamp(column));
+					break;
+				case "Double":
+					obj= res.getDouble(column);
+					break;
+				case "Long":
+					obj= res.getLong(column);
+					break;
+				default:
+					break;
+				}
+				
+				
+				if (obj==null) {
+					continue;
+				}
+				
+				user.setByKey(column, obj);
+			}
+			userList.add(user);
+			}
 		}
-	return ret;
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		return userList;
 	}
-	
-	
-	
-	public boolean updateById(int id,User userNew){
-		String MatchValues=userNew.toString();
-		String columns= String.join(",",javaSQL.getColumns());
-		String types=String.join(",", javaSQL.getTypes());
-		boolean ret=javaSQL.changeInfo(tableName, id,columns , MatchValues, types);
-		return ret;
+	public ArrayList<User> selectEntity(String columns,Object ...MatchValues){
+		ArrayList<User> userList= new ArrayList<User>();
+		ResultSet res =Select(User.toSQLColumns(),columns,MatchValues);
+		String[] columnsKeys=columns.split(",");
+		try{
+		while(res.next()){
+			User user=new User();
+			for(String column:columnsKeys){
+				
+				Object obj=null;
+				String type=this.TypeMap.get(column);
+				switch (type){
+    
+				case "Integer":
+					obj=res.getInt(column);
+					break;
+				case "String":
+					obj=res.getString(column);
+					break;
+				case "Date":
+					obj= ToStr.Timestamp2Date(res.getTimestamp(column));
+					break;
+				case "Double":
+					obj= res.getDouble(column);
+					break;
+				case "Long":
+					obj= res.getLong(column);
+					break;
+				default:
+					break;
+				}
+				
+				
+				if (obj==null) {
+					continue;
+				}
+				
+				user.setByKey(column, obj);
+			}
+			userList.add(user);
+			}
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		return userList;
 	}
-	
-	public Map<String , String> SelectById(String SelectedKeys,int id){
-		return javaSQL.Select(tableName, SelectedKeys, "id", GraceJava.int2str(id), "int");
-		
+     	public ArrayList<User> selectEntity(User userSelect){
+            String MatchValues=userSelect.toSQLValues();
+		ArrayList<User> userList= new ArrayList<User>();
+		String columns=User.toSQLColumns();
+		ResultSet res =Select(User.toSQLColumns(),columns,MatchValues);
+		String[] columnsKeys=columns.split(",");
+		try{
+		while(res.next()){
+			User user=new User();
+			for(String column:columnsKeys){
+				
+					Object obj=null;
+				String type=this.TypeMap.get(column);
+				switch (type){
+    
+				case "Integer":
+					obj=res.getInt(column);
+					break;
+				case "String":
+					obj=res.getString(column);
+					break;
+				case "Date":
+					obj= ToStr.Timestamp2Date(res.getTimestamp(column));
+					break;
+				case "Double":
+					obj= res.getDouble(column);
+					break;
+				case "Long":
+					obj= res.getLong(column);
+					break;
+				default:
+					break;
+				}
+				
+				
+				if (obj==null) {
+					continue;
+				}
+				
+				user.setByKey(column, obj);
+			}
+			userList.add(user);
+			}
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		return userList;
 	}
-	public ArrayList<Map<String,String>> SelectByKeys(String SelectedKeys,String MatchKeys,String MatchValues){
-		String MatchValueTypes=javaSQL.TypesOfKeys(MatchKeys);
-		return javaSQL.SelectBat(tableName, SelectedKeys, MatchKeys, MatchValues, MatchValueTypes);
+	public boolean add(User user){
+		if (isDuplicatedByKey("id",user.getId()).equals("No")){
+			return addEntity(User.toSQLColumns(),user.toSQLValues());
+		}
+            System.out.println("addUserError-DuplicatedAdded.");
+		return false;
 	}
-	
 }
