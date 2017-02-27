@@ -9,7 +9,7 @@
 		* control MySQL easily and gracefully.<br>
 		* very easy to complete an "entityDao" Class.<br>
 	* plus:重点是utils包有木有！GraceJava和SQL两个类是最好玩的！<br>
-	*已封存于历史版本，见oldversion v0.1
+	* 已封存于历史版本，见oldversion v0.1
 	<br>
 * JavaEE/Python 面向数据库知识的编程，代码自动化<br>
 	* Date: 2017-02-27<br>
